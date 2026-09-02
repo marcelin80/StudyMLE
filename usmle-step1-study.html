@@ -31,13 +31,12 @@
 
   .shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh;}
   @media (max-width:820px){
-    .shell{display:flex;flex-direction:column;min-height:100vh;}
-    .rail{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);flex-shrink:0;}
+    .shell{display:block;min-height:0;}
+    .rail{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);}
     .rail.collapsed .sys-list,.rail.collapsed .rail-foot{display:none;}
     .rail-head{cursor:pointer;-webkit-tap-highlight-color:transparent;}
     .rail-head::after{content:'▼';float:right;font-size:10px;color:var(--ink-soft);}
     .rail.collapsed .rail-head::after{content:'▶';}
-    .main{flex:1;}
   }
 
   .rail{border-right:1px solid var(--line);background:var(--paper-raised);position:sticky;top:0;height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
