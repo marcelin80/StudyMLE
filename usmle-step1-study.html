@@ -212,6 +212,7 @@ function lookupBankSummary(sysId, topic){
   const s = SUMMARY_BANK[sysId] && SUMMARY_BANK[sysId][topic];
   return s ? JSON.parse(JSON.stringify(s)) : null;
 }
+function emptyTopicStat(){ return { attempts:0, correct:0 }; }
 function getSysStat(sysId){
   if(!DATA.stats[sysId]) DATA.stats[sysId] = { attempts:0, correct:0, topics:{} };
   return DATA.stats[sysId];
@@ -580,6 +581,7 @@ document.addEventListener('click', async (e)=>{
   }
   else if(action==='select-sys'){
     state.activeSystem = btn.dataset.sys; state.view='dashboard'; render();
+    document.getElementById('main').scrollIntoView({behavior:'smooth'});
   }
   else if(action==='start-topic'){
     const sys = SYSTEMS.find(s=>s.id===state.activeSystem);
