@@ -1,0 +1,274 @@
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+}
+
+.sidebar {
+  padding: 28px 22px;
+  border-right: 1px solid var(--line);
+  background: rgba(16, 20, 18, 0.72);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.mark-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, var(--gold), #8d6a2e);
+  color: #1a1408;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.mark h1 {
+  margin: 0;
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.mark p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.nav {
+  display: grid;
+  gap: 8px;
+}
+
+.nav button {
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.nav button.active,
+.nav button:hover {
+  color: var(--ink);
+  background: var(--bg-soft);
+  border-color: var(--line);
+}
+
+.sidebar-foot {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.main {
+  padding: 36px 48px 72px;
+}
+
+.kicker {
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.hero h2,
+.panel h2,
+.lesson h2 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 2.4rem;
+  line-height: 1.15;
+  margin: 0 0 12px;
+  max-width: 16ch;
+}
+
+.lede {
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.card,
+.panel,
+.choice,
+.lesson {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card {
+  padding: 22px;
+  text-align: left;
+  color: inherit;
+  display: grid;
+  gap: 10px;
+}
+
+.card:hover {
+  border-color: rgba(214, 177, 106, 0.4);
+}
+
+.card span {
+  color: var(--sage);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card h3 {
+  margin: 0;
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.35rem;
+}
+
+.card p,
+.lesson p,
+.panel p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.progress {
+  height: 6px;
+  border-radius: 99px;
+  background: #2a3530;
+  overflow: hidden;
+}
+
+.progress > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--sage), var(--gold));
+}
+
+.meta {
+  display: flex;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.panel,
+.lesson {
+  padding: 28px;
+  margin-top: 24px;
+}
+
+.lessons {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.lessons button,
+.back {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.lessons button {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lessons button:hover,
+.back:hover {
+  border-color: var(--gold);
+}
+
+.back {
+  margin-bottom: 18px;
+}
+
+.notes {
+  margin: 18px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.choice {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px 16px;
+  text-align: left;
+  color: var(--ink);
+}
+
+.choice.correct {
+  border-color: var(--sage);
+}
+
+.choice.wrong {
+  border-color: var(--danger);
+}
+
+.explain {
+  margin-top: 16px;
+  color: var(--sage);
+}
+
+.status {
+  margin-top: 28px;
+  padding: 14px 16px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 980px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .main {
+    padding: 28px 20px 56px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h2,
+  .panel h2,
+  .lesson h2 {
+    font-size: 2rem;
+    max-width: none;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "install": "npm install",
+  "start": "bash scripts/start-dev.sh",
+  "terminals": [
+    {
+      "name": "StudyMLE Vite",
+      "command": "npm run dev"
+    }
+  ]
+}

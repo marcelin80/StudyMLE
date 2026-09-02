@@ -1,0 +1,52 @@
+:root {
+  color-scheme: dark;
+  --bg: #101412;
+  --bg-elev: #18201c;
+  --bg-soft: #1f2a24;
+  --line: rgba(212, 196, 160, 0.16);
+  --ink: #f4efe4;
+  --muted: #9aa89c;
+  --gold: #d6b16a;
+  --sage: #86b89a;
+  --danger: #d37a6a;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(134, 184, 154, 0.12), transparent 50%),
+    radial-gradient(900px 500px at 100% 0%, rgba(214, 177, 106, 0.1), transparent 46%),
+    var(--bg);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
