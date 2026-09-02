@@ -1,23 +1,27 @@
-# StudyMLE
+# StudyMLE — USMLE Step 1 Study App
 
-A local study studio for machine learning engineering: short tracks on supervised models, production systems, and practical probability.
+A self-contained, single-HTML-file study app for USMLE Step 1 preparation.
+
+## Features
+
+- 15 organ systems with topic-level question banks
+- UWorld-style clinical vignettes with 5-option MCQs
+- First Aid-style high-yield summary notes per topic
+- Per-option explanations and high-yield point flashcards
+- Progress tracking with accuracy stats per system/topic
+- Works offline — all pre-generated questions are embedded in the HTML
+- localStorage persistence for study progress
 
 ## Development
 
-Requires Node.js 22+.
-
 ```bash
-npm install
-npm run dev
+python3 -m http.server 8080
 ```
 
-The Vite app listens on [http://127.0.0.1:5173](http://127.0.0.1:5173).
+Open [http://127.0.0.1:8080/usmle-step1-study.html](http://127.0.0.1:8080/usmle-step1-study.html).
 
-| Script | Purpose |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Typecheck and produce a production bundle |
-| `npm run preview` | Serve the production bundle |
-| `npm run typecheck` | Typecheck only |
+## Deployment (GitHub Pages)
 
-Cloud Agent environments run `npm install` during snapshot setup and `bash scripts/start-dev.sh` on each boot. That script starts Vite if port 5173 is not already healthy, waits for a successful HTTP response, and then returns.
+1. Push this repo to GitHub
+2. Enable GitHub Pages (Settings -> Pages -> deploy from branch)
+3. Access at `https://<username>.github.io/<repo>/usmle-step1-study.html`

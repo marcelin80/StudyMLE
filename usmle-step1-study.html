@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 1 Study Chart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#182420;
+    --ink-soft:#3c4a44;
+    --paper:#EEF0EA;
+    --paper-raised:#F8F9F4;
+    --line:#CBCDBF;
+    --teal:#235E63;
+    --teal-soft:#DCE8E4;
+    --rust:#9C4A2E;
+    --rust-soft:#F1DFD5;
+    --sage:#3C7A5D;
+    --sage-soft:#DCEAE0;
+    --radius:3px;
+    --serif:'Newsreader', Georgia, serif;
+    --sans:'IBM Plex Sans', -apple-system, sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);}
+  ::selection{background:var(--teal-soft);}
+  button{font-family:inherit;cursor:pointer;}
+
+  .shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh;}
+  @media (max-width:820px){ .shell{grid-template-columns:1fr;} .rail{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);} }
+
+  .rail{border-right:1px solid var(--line);background:var(--paper-raised);position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .rail-head{padding:22px 20px 16px;border-bottom:1px solid var(--line);}
+  .rail-head .mark{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-soft);}
+  .rail-head h1{font-family:var(--serif);font-weight:500;font-size:21px;margin:6px 0 2px;line-height:1.2;}
+  .rail-head .overall{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:8px;}
+  .rail-head .overall b{color:var(--teal);}
+
+  .sys-list{padding:6px 0;}
+  .sys-item{display:flex;align-items:center;gap:10px;padding:10px 20px;border:none;background:none;width:100%;text-align:left;border-left:3px solid transparent;}
+  .sys-item:hover{background:var(--paper);}
+  .sys-item.active{background:var(--paper);border-left-color:var(--teal);}
+  .sys-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .sys-name{font-size:13.5px;flex:1;line-height:1.3;}
+  .sys-pct{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);}
+
+  .rail-foot{padding:16px 20px;border-top:1px solid var(--line);}
+  .reset-btn{font-family:var(--mono);font-size:11px;color:var(--ink-soft);background:none;border:1px solid var(--line);border-radius:var(--radius);padding:7px 10px;}
+  .reset-btn:hover{border-color:var(--rust);color:var(--rust);}
+
+  .main{padding:32px 40px 80px;max-width:760px;}
+  @media (max-width:820px){ .main{padding:24px 20px 60px;} }
+
+  .crumb{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-bottom:6px;}
+  .page-title{font-family:var(--serif);font-size:30px;font-weight:500;margin:0 0 4px;}
+  .page-sub{color:var(--ink-soft);font-size:14px;margin-bottom:28px;}
+
+  .stat-row{display:flex;gap:24px;margin:18px 0 30px;flex-wrap:wrap;}
+  .stat{border-left:2px solid var(--line);padding-left:12px;}
+  .stat .num{font-family:var(--mono);font-size:20px;color:var(--teal);}
+  .stat .lab{font-size:12px;color:var(--ink-soft);}
+
+  .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:560px){ .topic-grid{grid-template-columns:1fr;} }
+  .topic-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:14px 16px;}
+  .topic-card:hover{border-color:var(--teal);}
+  .topic-card .t-name{font-size:13.5px;line-height:1.4;margin-bottom:8px;}
+  .topic-card .t-meta{font-family:var(--mono);font-size:11px;color:var(--ink-soft);display:flex;justify-content:space-between;}
+  .bar{height:3px;background:var(--line);border-radius:2px;margin-top:6px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--teal);}
+  .t-actions{display:flex;gap:6px;margin-top:10px;}
+  .t-actions button{flex:1;font-size:11.5px;border:1px solid var(--line);background:var(--paper);border-radius:var(--radius);padding:6px 8px;color:var(--ink);}
+  .t-actions button:hover{border-color:var(--teal);color:var(--teal);}
+  .bank-badge{font-family:var(--mono);font-size:10px;color:var(--sage);font-weight:400;}
+
+  .custom-box{margin-top:34px;border-top:1px solid var(--line);padding-top:22px;}
+  .custom-box h3{font-family:var(--serif);font-weight:500;font-size:16px;margin:0 0 4px;}
+  .custom-box p{font-size:12.5px;color:var(--ink-soft);margin:0 0 10px;}
+  textarea{width:100%;font-family:var(--sans);font-size:13.5px;border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;resize:vertical;min-height:70px;background:var(--paper-raised);color:var(--ink);}
+  textarea:focus{outline:none;border-color:var(--teal);}
+  .primary-btn{margin-top:10px;background:var(--ink);color:var(--paper);border:none;border-radius:var(--radius);padding:10px 18px;font-size:13px;font-weight:500;}
+  .primary-btn:hover{background:var(--teal);}
+  .primary-btn:disabled{background:var(--line);color:var(--ink-soft);cursor:default;}
+  .ghost-btn{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--radius);padding:9px 16px;font-size:13px;}
+  .ghost-btn:hover{border-color:var(--ink);}
+
+  .vignette-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:26px 28px;margin-bottom:20px;}
+  .v-tag{font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.03em;margin-bottom:12px;}
+  .v-text{font-family:var(--serif);font-size:17px;line-height:1.65;margin:0 0 16px;}
+  .v-question{font-size:14.5px;font-weight:500;line-height:1.5;}
+
+  .options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+  .opt{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);overflow:hidden;}
+  .opt:hover:not(.locked){border-color:var(--teal);}
+  .opt-btn{display:flex;gap:12px;align-items:flex-start;width:100%;background:none;border:none;padding:12px 14px;text-align:left;font-size:13.5px;line-height:1.5;color:inherit;}
+  .opt .letter{font-family:var(--mono);color:var(--ink-soft);flex-shrink:0;}
+  .opt.correct{border-color:var(--sage);background:var(--sage-soft);}
+  .opt.correct .letter{color:var(--sage);}
+  .opt.incorrect{border-color:var(--rust);background:var(--rust-soft);}
+  .opt.incorrect .letter{color:var(--rust);}
+  .opt-explain{font-size:12.5px;line-height:1.55;color:var(--ink-soft);padding:0 14px 12px 40px;}
+
+  .explain{border-left:2px solid var(--teal);padding:4px 0 4px 16px;margin-bottom:24px;}
+  .explain .e-label{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-bottom:6px;}
+  .explain p{font-size:13.5px;line-height:1.65;margin:0;white-space:pre-wrap;}
+
+  .quiz-actions{display:flex;gap:10px;}
+
+  .loading-block{padding:60px 0;text-align:center;color:var(--ink-soft);font-family:var(--mono);font-size:12.5px;}
+  .error-block{border:1px solid var(--rust);background:var(--rust-soft);border-radius:var(--radius);padding:16px 18px;font-size:13px;}
+  .error-block b{display:block;margin-bottom:4px;color:var(--rust);}
+
+  .weak-list{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+  .weak-row{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 10px;background:var(--rust-soft);border-radius:var(--radius);}
+  .weak-row span:last-child{font-family:var(--mono);color:var(--rust);}
+
+  .hy-toggle{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft);border:1px solid var(--line);border-radius:var(--radius);padding:7px 12px;margin-bottom:24px;background:var(--paper-raised);cursor:pointer;}
+  .hy-toggle input{accent-color:var(--teal);}
+
+  .hy-point{border-left:2px solid var(--sage);background:var(--sage-soft);padding:10px 16px;margin-bottom:24px;border-radius:0 var(--radius) var(--radius) 0;}
+  .hy-point .e-label{font-family:var(--mono);font-size:11px;color:var(--sage);margin-bottom:6px;}
+  .hy-point p{font-size:13.5px;line-height:1.6;margin:0;font-weight:500;}
+
+  .summary-card{border:1px solid var(--line);background:var(--paper-raised);border-radius:var(--radius);padding:24px 28px;margin-bottom:20px;}
+  .sum-section{margin-bottom:18px;}
+  .sum-section:last-child{margin-bottom:0;}
+  .sum-heading{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--teal);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--line);}
+  .sum-bullets{margin:0;padding-left:18px;}
+  .sum-bullets li{font-size:13.5px;line-height:1.65;margin-bottom:6px;}
+  .sum-bullets li:last-child{margin-bottom:0;}
+  .sum-bullets strong{color:var(--ink);background:var(--teal-soft);padding:0 2px;}
+
+  .sum-table-wrap{overflow-x:auto;margin-top:18px;}
+  .sum-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .sum-table th,.sum-table td{border:1px solid var(--line);padding:8px 10px;text-align:left;line-height:1.5;}
+  .sum-table th{font-family:var(--mono);font-size:11px;color:var(--ink-soft);background:var(--paper);font-weight:500;}
+  .sum-table strong{color:var(--ink);}
+
+  .sum-mnemonic{border-left:2px solid var(--rust);background:var(--rust-soft);padding:10px 16px;margin-top:18px;border-radius:0 var(--radius) var(--radius) 0;}
+  .sum-mnemonic .e-label{font-family:var(--mono);font-size:11px;color:var(--rust);margin-bottom:6px;}
+  .sum-mnemonic p{font-size:13.5px;line-height:1.6;margin:0;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="rail">
+    <div class="rail-head">
+      <div class="mark">USMLE · STEP 1</div>
+      <h1>Study Chart</h1>
+      <div class="overall" id="overallStat">— 문제 시도 전</div>
+    </div>
+    <div class="sys-list" id="sysList"></div>
+    <div class="rail-foot">
+      <button class="reset-btn" data-action="reset">기록 초기화</button>
+    </div>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+const SYSTEMS = [
+  {id:'biochem', label:'Biochemistry & Genetics', color:'#6B4C9A', topics:['Molecular biology','Genetics & inheritance patterns','Carbohydrate metabolism','Lipid metabolism','Vitamins & nutrition','Cellular organelles & trafficking']},
+  {id:'immuno', label:'Immunology', color:'#2E7D6B', topics:['Innate & adaptive immunity','Immunodeficiencies','Hypersensitivity reactions','Autoimmune disease','Transplant immunology']},
+  {id:'micro', label:'Microbiology', color:'#4A6FA5', topics:['Bacterial structure & genetics','Gram-positive bacteria','Gram-negative bacteria','Virology','Mycology & parasitology','Antimicrobial pharmacology']},
+  {id:'gpath', label:'General Pathology', color:'#8A4B3B', topics:['Cell injury & death','Inflammation & repair','Neoplasia','Hemodynamics & shock']},
+  {id:'pharm', label:'Pharmacology', color:'#B5762E', topics:['Pharmacokinetics','Pharmacodynamics','Autonomic drugs','Toxicology & antidotes']},
+  {id:'behav', label:'Behavioral Science', color:'#A34F7C', topics:['Psychiatric disorders','Biostatistics & epidemiology','Ethics & legal issues','Substance use disorders']},
+  {id:'cardio', label:'Cardiovascular', color:'#B0453F', topics:['Cardiac physiology','Atherosclerosis & ischemic heart disease','Heart failure','Arrhythmias','Valvular disease','Congenital heart disease','Cardiomyopathies','Vascular pathology']},
+  {id:'pulm', label:'Pulmonary', color:'#3E7CA6', topics:['Lung physiology & mechanics','Obstructive lung disease','Restrictive lung disease','Pulmonary vascular disease','Lung neoplasms','Acid-base & gas exchange']},
+  {id:'renal', label:'Renal', color:'#3F8F8A', topics:['Renal physiology','Acid-base disorders','Glomerular disease','Tubulointerstitial disease','Renal tumors','Fluid & electrolyte disorders']},
+  {id:'gi', label:'Gastrointestinal', color:'#8B7A3A', topics:['GI physiology','Esophageal & gastric disease','Liver pathology','Pancreatic & biliary disease','Inflammatory bowel disease','GI neoplasms']},
+  {id:'heme', label:'Hematology & Oncology', color:'#A33E5C', topics:['RBC disorders & anemia','WBC disorders','Coagulation disorders','Leukemias & lymphomas','Transfusion medicine','Oncologic principles']},
+  {id:'endo', label:'Endocrine', color:'#C06A2E', topics:['Hypothalamic-pituitary axis','Thyroid disease','Adrenal disease','Diabetes mellitus','Calcium homeostasis','Pancreatic endocrine disorders']},
+  {id:'repro', label:'Reproductive', color:'#9C5A8F', topics:['Reproductive endocrinology','Pregnancy & obstetric complications','Gynecologic pathology','Male reproductive pathology','Sexually transmitted infections']},
+  {id:'msk', label:'MSK, Skin & Connective Tissue', color:'#6E7A3A', topics:['Bone & joint disorders','Connective tissue disease','Skin pathology','Rheumatologic disease','Muscle disorders']},
+  {id:'neuro', label:'Nervous System & Special Senses', color:'#4A4A8A', topics:['Neuroanatomy & pathways','Cerebrovascular disease','Neurodegenerative disease','Seizure disorders','Ophthalmology & otology','Neuro-oncology']},
+];
+
+const STORAGE_KEY = 'usmle-study-data-v1';
+// Storage abstraction: works both inside a Claude artifact (window.storage)
+// and as a plain hosted static site (falls back to localStorage).
+async function storageGet(key){
+  if(window.storage){
+    try{ const r = await window.storage.get(key, false); return r ? r.value : null; }
+    catch(e){ return null; }
+  }
+  try{ return localStorage.getItem(key); }catch(e){ return null; }
+}
+async function storageSet(key, value){
+  if(window.storage){
+    try{ await window.storage.set(key, value, false); return; }catch(e){ /* fall through */ }
+  }
+  try{ localStorage.setItem(key, value); }catch(e){ console.error('save failed', e); }
+}
+let DATA = { stats:{}, history:[], settings:{highYield:true} };
+let state = { view:'dashboard', activeSystem:SYSTEMS[0].id, quiz:null, summary:null, answered:false, selectedIdx:null, loadingMsg:'', errorMsg:'' };
+
+// Pre-generated content bank: original questions/summaries written ahead of time,
+// so most study sessions need NO live API call (works with no login, on any device).
+// Populated system-by-system; topics not yet in the bank fall back to live generation.
+const QUESTION_BANK = {
+  cardio: {
+    'Cardiac physiology': [{
+      vignette:"A 55-year-old man undergoes cardiac catheterization for evaluation of long-standing severe aortic regurgitation.",
+      question:"Compared to a healthy heart, his left ventricular pressure-volume loop is most likely to show which of the following?",
+      options:[
+        "Decreased end-diastolic volume with increased ejection fraction",
+        "Increased end-diastolic volume with a widened loop reflecting increased stroke volume",
+        "Decreased stroke volume with increased end-systolic pressure",
+        "Prolonged isovolumic contraction with unchanged preload",
+        "Reduced loop area reflecting decreased stroke work"
+      ],
+      correctIndex:1,
+      explanation:"Chronic AR causes chronic volume overload, producing eccentric hypertrophy with increased end-diastolic volume and a widened PV loop (increased stroke volume) while contractility is initially preserved.",
+      optionExplanations:[
+        "Incorrect — AR increases, not decreases, end-diastolic volume.",
+        "Correct — classic volume-overload physiology: dilated ventricle, increased preload and stroke volume.",
+        "Incorrect — stroke volume is increased, not decreased, in compensated chronic AR.",
+        "Incorrect — isovolumic contraction is actually shortened since the aortic valve doesn't seal properly.",
+        "Incorrect — stroke work (loop area) is typically increased, not reduced."
+      ],
+      highYieldPoint:"Chronic AR → eccentric hypertrophy → ↑EDV & ↑SV, widened PV loop (volume overload). Contrast with aortic stenosis: concentric hypertrophy, tall/narrow loop (pressure overload)."
+    },{
+      vignette:"On cardiac exam of a healthy 24-year-old man, the physician notes that the second heart sound (S2) splits further apart during inspiration and comes back together during expiration.",
+      question:"Which of the following best explains this finding?",
+      options:[
+        "Increased venous return to the right heart during inspiration delays pulmonic valve closure",
+        "Decreased venous return to the right heart during inspiration delays pulmonic valve closure",
+        "Increased left ventricular preload during inspiration delays aortic valve closure",
+        "Fixed splitting due to an atrial septal defect",
+        "Paradoxical splitting due to delayed aortic valve closure"
+      ],
+      correctIndex:0,
+      explanation:"During inspiration, negative intrathoracic pressure increases venous return to the right heart, increasing RV stroke volume and delaying pulmonic valve closure (P2), while pulmonary vascular capacitance transiently reduces left heart filling, causing earlier aortic closure (A2) — widening the physiologic split.",
+      optionExplanations:[
+        "Correct — this is normal physiologic splitting.",
+        "Incorrect — venous return to the right heart increases, not decreases, with inspiration.",
+        "Incorrect — LV preload actually decreases slightly with inspiration, causing A2 to occur earlier, not later.",
+        "Incorrect — fixed splitting (unchanged with respiration) is classic for ASD, not this normal finding.",
+        "Incorrect — paradoxical splitting (widens on expiration) occurs when LV ejection is delayed (e.g., severe AS, LBBB)."
+      ],
+      highYieldPoint:"Physiologic S2 splitting widens with inspiration (↑ RV filling delays P2). Fixed splitting = ASD. Paradoxical splitting (widens on expiration) = delayed LV ejection (severe AS, LBBB)."
+    },{
+      vignette:"A 45-year-old man loses 1.5 L of blood after a motor vehicle accident. Baroreceptors in the carotid sinus and aortic arch detect the resulting drop in blood pressure.",
+      question:"Which of the following physiologic responses is expected?",
+      options:[
+        "Decreased sympathetic outflow with increased parasympathetic tone, causing bradycardia",
+        "Increased sympathetic outflow with increased heart rate and peripheral vasoconstriction",
+        "Decreased heart rate and contractility to reduce myocardial oxygen demand",
+        "Increased parasympathetic outflow to the SA node, increasing heart rate",
+        "No change in baroreceptor firing, since carotid baroreceptors only respond above 150 mmHg"
+      ],
+      correctIndex:1,
+      explanation:"Decreased blood pressure reduces baroreceptor stretch and afferent firing to the medulla, leading to decreased vagal tone and increased sympathetic outflow — increasing heart rate, contractility, and vasoconstriction to restore blood pressure.",
+      optionExplanations:[
+        "Incorrect — this describes the response to increased, not decreased, blood pressure.",
+        "Correct — decreased baroreceptor firing disinhibits sympathetic outflow.",
+        "Incorrect — the reflex increases, not decreases, heart rate and contractility during hypotension.",
+        "Incorrect — parasympathetic tone decreases, and vagal stimulation of the SA node slows, not increases, heart rate.",
+        "Incorrect — baroreceptors respond continuously across a physiologic pressure range, not only above 150 mmHg."
+      ],
+      highYieldPoint:"↓ BP → ↓ baroreceptor firing → ↓ vagal tone + ↑ sympathetic tone → ↑ HR, ↑ contractility, vasoconstriction. Carotid sinus massage mimics high BP and can terminate SVT via the opposite reflex."
+    },{
+      vignette:"A patient's whole-body oxygen consumption (VO2) is measured at 250 mL/min. Arterial oxygen content is 20 mL O2/dL blood, and mixed venous oxygen content is 15 mL O2/dL blood.",
+      question:"Using the Fick principle, what is this patient's cardiac output?",
+      options:["2.5 L/min","5 L/min","7.5 L/min","10 L/min","12.5 L/min"],
+      correctIndex:1,
+      explanation:"By the Fick principle, CO = VO2 ÷ (arterial O2 content − venous O2 content) = 250 mL/min ÷ 0.05 mL O2/mL blood (5 mL/dL) = 5,000 mL/min = 5 L/min.",
+      optionExplanations:[
+        "Incorrect — results from a unit conversion error (e.g., not converting dL to mL correctly).",
+        "Correct — 250 ÷ 0.05 = 5,000 mL/min = 5 L/min.",
+        "Incorrect — does not match the Fick calculation with these values.",
+        "Incorrect — would require a smaller AV O2 difference than given.",
+        "Incorrect — would require an even smaller AV O2 difference than given."
+      ],
+      highYieldPoint:"Fick principle: CO = VO2 ÷ (arterial O2 content − venous O2 content). Watch your units — content is usually given per dL (100 mL), so convert before dividing."
+    },{
+      vignette:"A researcher records transmembrane action potentials from a cell in the SA node and compares it to one from a ventricular myocyte.",
+      question:"Which of the following distinguishes the SA nodal action potential from the ventricular myocyte action potential?",
+      options:[
+        "SA node has a stable resting potential and a rapid phase 0 upstroke mediated by fast Na+ channels",
+        "SA node action potentials lack a true stable resting potential and depolarize spontaneously during phase 4 via the funny current (If)",
+        "SA node action potentials have a prominent phase 2 plateau mediated by L-type calcium channels",
+        "Ventricular myocytes normally exhibit spontaneous phase 4 depolarization (automaticity)",
+        "Both cell types depolarize at an identical rate and by an identical mechanism"
+      ],
+      correctIndex:1,
+      explanation:"Pacemaker cells (SA/AV node) lack a stable resting potential; they spontaneously depolarize during phase 4 via the funny current (If) and T-/L-type calcium channels, driving automaticity, with a slow calcium-mediated upstroke rather than the fast sodium-mediated upstroke of ventricular myocytes.",
+      optionExplanations:[
+        "Incorrect — this describes the ventricular myocyte, not the SA node.",
+        "Correct — automaticity via unstable resting potential and phase 4 funny current is the hallmark of pacemaker cells.",
+        "Incorrect — the plateau phase (phase 2) is a feature of ventricular myocytes, not nodal cells.",
+        "Incorrect — ventricular myocytes normally have a stable resting potential and do not spontaneously depolarize (though they can pathologically as ectopic pacemakers).",
+        "Incorrect — nodal cells depolarize spontaneously and set the pace; myocytes only depolarize when stimulated."
+      ],
+      highYieldPoint:"Pacemaker cells (SA/AV node): unstable resting potential, phase 4 spontaneous depolarization (funny current), slow Ca2+-mediated upstroke. Ventricular myocytes: stable resting potential, fast Na+ upstroke, prominent plateau (Ca2+ influx)."
+    },{
+      vignette:"Echocardiography in a 60-year-old man shows a left ventricular end-diastolic volume of 120 mL and an end-systolic volume of 50 mL.",
+      question:"What is this patient's ejection fraction?",
+      options:["42%","58%","65%","70%","83%"],
+      correctIndex:1,
+      explanation:"Stroke volume = EDV − ESV = 120 − 50 = 70 mL. Ejection fraction = SV ÷ EDV = 70 ÷ 120 ≈ 58%.",
+      optionExplanations:[
+        "Incorrect — does not match SV/EDV with these values.",
+        "Correct — 70/120 ≈ 58%, a normal ejection fraction.",
+        "Incorrect — overestimates the calculated value.",
+        "Incorrect — overestimates the calculated value.",
+        "Incorrect — overestimates the calculated value substantially."
+      ],
+      highYieldPoint:"EF = SV/EDV = (EDV − ESV)/EDV. Normal EF is roughly 55-70%. HFrEF is defined as EF < 40%."
+    },{
+      vignette:"During exercise, coronary blood flow increases substantially to meet rising myocardial oxygen demand, largely independent of systemic blood pressure changes.",
+      question:"Which of the following is the primary local mediator responsible for this increase in coronary blood flow?",
+      options:["Endothelin-1","Adenosine","Angiotensin II","Norepinephrine acting on alpha-1 receptors","Vasopressin"],
+      correctIndex:1,
+      explanation:"Coronary blood flow is regulated primarily by local metabolic autoregulation. Adenosine, released from myocytes as ATP is broken down during increased metabolic demand or hypoxia, is the key vasodilator matching flow to demand.",
+      optionExplanations:[
+        "Incorrect — endothelin-1 is a potent vasoconstrictor, not a mediator of exercise-induced coronary vasodilation.",
+        "Correct — adenosine is the principal local vasodilator matching coronary flow to myocardial metabolic demand.",
+        "Incorrect — angiotensin II is a vasoconstrictor involved in systemic blood pressure regulation, not local coronary autoregulation.",
+        "Incorrect — alpha-1 stimulation causes vasoconstriction, opposing increased flow.",
+        "Incorrect — vasopressin is a systemic vasoconstrictor active in volume regulation, not local coronary autoregulation."
+      ],
+      highYieldPoint:"Coronary blood flow is regulated mainly by local metabolic factors — adenosine (from ATP breakdown/hypoxia) is the primary vasodilator matching flow to myocardial O2 demand."
+    },{
+      vignette:"A 68-year-old man with long-standing severe tricuspid regurgitation undergoes bedside examination of his jugular venous pulse.",
+      question:"Which of the following JVP abnormalities is most likely to be found?",
+      options:[
+        "Absent a wave",
+        "Giant, fused c-v wave (regurgitant systolic wave)",
+        "Cannon a waves",
+        "Slow y descent with preserved x descent",
+        "Prominent x descent with a normal v wave"
+      ],
+      correctIndex:1,
+      explanation:"Tricuspid regurgitation causes blood to flow backward into the right atrium during ventricular systole, producing a giant, fused c-v wave and blunting/obliterating the normal x descent.",
+      optionExplanations:[
+        "Incorrect — an absent a wave occurs in atrial fibrillation (no organized atrial contraction), not TR.",
+        "Correct — TR produces a large regurgitant systolic (cv) wave.",
+        "Incorrect — cannon a waves occur with AV dissociation (e.g., complete heart block), when the atrium contracts against a closed tricuspid valve.",
+        "Incorrect — TR blunts, not preserves, the x descent; a slow y descent is more typical of tricuspid stenosis or tamponade.",
+        "Incorrect — TR obliterates rather than preserves the normal x descent."
+      ],
+      highYieldPoint:"Tricuspid regurgitation → giant cv wave with loss of the x descent. Cannon a waves = AV dissociation (complete heart block). Absent a wave = atrial fibrillation."
+    },{
+      vignette:"During the cardiac cycle, there is a brief period after the mitral valve closes and before the aortic valve opens during which left ventricular volume does not change despite rapidly rising intraventricular pressure.",
+      question:"This period corresponds to which phase of the cardiac cycle?",
+      options:["Isovolumetric relaxation","Rapid ventricular filling","Isovolumetric contraction","Ventricular ejection","Atrial systole"],
+      correctIndex:2,
+      explanation:"Isovolumetric contraction occurs immediately after S1 (mitral valve closure): both the mitral and aortic valves are closed, so ventricular pressure rises sharply while volume remains constant, until pressure exceeds aortic pressure and the aortic valve opens.",
+      optionExplanations:[
+        "Incorrect — isovolumetric relaxation occurs after the aortic valve closes (S2), before the mitral valve opens.",
+        "Incorrect — this phase follows mitral valve opening, when both valves are not closed and volume is changing.",
+        "Correct — both valves closed, pressure rising, volume constant, right after S1.",
+        "Incorrect — ejection occurs after the aortic valve opens, when volume is actively decreasing.",
+        "Incorrect — atrial systole precedes mitral valve closure and contributes the final increment of ventricular filling."
+      ],
+      highYieldPoint:"Isovolumetric contraction: both valves closed, pressure rises, volume constant — occurs right after S1 (mitral closure), before the aortic valve opens."
+    },{
+      vignette:"A patient performs a Valsalva maneuver (forced expiration against a closed glottis) while blood pressure is continuously monitored.",
+      question:"During phase II of the Valsalva maneuver (sustained strain), which of the following hemodynamic changes is expected?",
+      options:[
+        "Increased venous return leading to increased blood pressure",
+        "Decreased venous return leading to decreased blood pressure and reflex tachycardia",
+        "Bradycardia due to increased vagal tone",
+        "No change in heart rate or blood pressure",
+        "Increased stroke volume due to increased preload"
+      ],
+      correctIndex:1,
+      explanation:"Sustained increased intrathoracic pressure during phase II decreases venous return to the heart, decreasing stroke volume and blood pressure, which triggers a baroreceptor-mediated reflex tachycardia.",
+      optionExplanations:[
+        "Incorrect — increased intrathoracic pressure decreases, not increases, venous return during sustained strain.",
+        "Correct — decreased venous return lowers BP, triggering reflex tachycardia.",
+        "Incorrect — the baroreceptor reflex increases sympathetic tone (tachycardia), not vagal tone, in response to the BP drop.",
+        "Incorrect — both heart rate and blood pressure change during this phase.",
+        "Incorrect — decreased venous return decreases, not increases, preload and stroke volume."
+      ],
+      highYieldPoint:"Valsalva phase II: ↑ intrathoracic pressure → ↓ venous return → ↓ BP → reflex tachycardia. This is why preload-dependent murmurs (HCM, MVP) get louder with Valsalva while most others get softer."
+    },{
+      vignette:"A 60-year-old woman with cirrhosis and hypoalbuminemia develops bilateral lower extremity edema and ascites.",
+      question:"Which of the following Starling force changes is primarily responsible for her edema?",
+      options:[
+        "Increased capillary hydrostatic pressure",
+        "Decreased plasma oncotic pressure",
+        "Increased interstitial oncotic pressure due to protein leakage",
+        "Decreased capillary permeability",
+        "Increased lymphatic drainage"
+      ],
+      correctIndex:1,
+      explanation:"Hypoalbuminemia from cirrhosis decreases plasma oncotic pressure, reducing the force that normally keeps fluid within the vasculature and favoring net fluid movement into the interstitium and peritoneal space.",
+      optionExplanations:[
+        "Incorrect — this is the mechanism in heart failure, not hypoalbuminemic states.",
+        "Correct — low albumin lowers plasma oncotic pressure, favoring fluid movement out of capillaries.",
+        "Incorrect — this mechanism is more relevant to inflammatory states with increased capillary permeability.",
+        "Incorrect — decreased permeability would reduce, not cause, fluid leakage.",
+        "Incorrect — impaired (not increased) lymphatic drainage contributes to edema (lymphedema), which is not the primary mechanism here."
+      ],
+      highYieldPoint:"Edema mechanisms: ↑ hydrostatic pressure (heart failure), ↓ oncotic pressure (liver disease/nephrotic syndrome — hypoalbuminemia), ↑ capillary permeability (inflammation), ↓ lymphatic drainage (lymphedema)."
+    },{
+      vignette:"A healthy 25-year-old begins moderate-intensity exercise. Cardiac output increases from 5 L/min at rest to 20 L/min during exercise.",
+      question:"Which of the following best explains this increase in cardiac output?",
+      options:[
+        "Increased heart rate and increased stroke volume, with decreased vascular resistance in exercising muscle",
+        "Increased heart rate only, with no change in stroke volume",
+        "Decreased heart rate with a compensatory increase in stroke volume",
+        "Increased total peripheral resistance to redirect blood toward exercising muscle",
+        "Decreased venous return due to skeletal muscle contraction"
+      ],
+      correctIndex:0,
+      explanation:"Exercise increases cardiac output through both increased heart rate (sympathetic activation) and increased stroke volume (enhanced contractility and venous return via the skeletal muscle pump), while local metabolic vasodilators decrease resistance in active muscle beds.",
+      optionExplanations:[
+        "Correct — both HR and SV increase, with local vasodilation in exercising muscle.",
+        "Incorrect — stroke volume also increases substantially with exercise, particularly early on.",
+        "Incorrect — heart rate increases, not decreases, during exercise.",
+        "Incorrect — overall TPR typically decreases due to marked vasodilation in exercising muscle, despite vasoconstriction elsewhere.",
+        "Incorrect — the skeletal muscle pump increases, not decreases, venous return during rhythmic exercise."
+      ],
+      highYieldPoint:"Exercise: ↑HR + ↑SV (via ↑contractility and ↑venous return from the muscle pump) → ↑CO. Local vasodilation (adenosine, metabolites) ↓ resistance in active muscle despite systemic sympathetic activation."
+    },{
+      vignette:"During strenuous exercise, the oxygen-hemoglobin dissociation curve in exercising skeletal muscle shifts to the right due to increased CO2, temperature, and 2,3-BPG.",
+      question:"What is the physiologic significance of this right shift?",
+      options:[
+        "Increased hemoglobin affinity for oxygen, improving oxygen loading in the lungs",
+        "Decreased hemoglobin affinity for oxygen, facilitating oxygen unloading to tissue",
+        "No effect on tissue oxygen delivery",
+        "Increased carbon monoxide binding to hemoglobin",
+        "A shift toward fetal hemoglobin's oxygen-binding characteristics"
+      ],
+      correctIndex:1,
+      explanation:"A rightward shift of the oxygen-hemoglobin dissociation curve (the Bohr effect) reflects decreased hemoglobin affinity for oxygen, which facilitates oxygen unloading into metabolically active, hypoxic, acidic, and warm tissue.",
+      optionExplanations:[
+        "Incorrect — a right shift decreases, not increases, oxygen affinity.",
+        "Correct — decreased affinity promotes oxygen release where it's needed most.",
+        "Incorrect — the shift meaningfully improves oxygen delivery to active tissue.",
+        "Incorrect — this shift is unrelated to carbon monoxide binding.",
+        "Incorrect — fetal hemoglobin has higher, not lower, oxygen affinity than adult hemoglobin — the opposite direction."
+      ],
+      highYieldPoint:"Right shift (↑ CO2, ↑ temperature, ↑ 2,3-BPG, ↓ pH) = decreased hemoglobin-O2 affinity = easier O2 unloading to tissue (Bohr effect) — exactly what's needed during exercise."
+    },{
+      vignette:"A patient in the ICU has a pulmonary capillary wedge pressure (PCWP) of 22 mmHg (normal 4-12 mmHg) measured via a Swan-Ganz catheter.",
+      question:"This finding is most consistent with which of the following?",
+      options:[
+        "Left-sided heart failure with elevated left atrial pressure",
+        "Isolated right-sided heart failure",
+        "Hypovolemia",
+        "Pulmonary embolism without left heart involvement",
+        "A normal physiologic finding after exercise"
+      ],
+      correctIndex:0,
+      explanation:"PCWP approximates left atrial pressure. An elevated PCWP indicates elevated left atrial/left ventricular filling pressure, most commonly from left-sided heart failure, causing cardiogenic pulmonary edema.",
+      optionExplanations:[
+        "Correct — elevated PCWP reflects elevated left atrial pressure, classic for left heart failure.",
+        "Incorrect — isolated right heart failure would not directly elevate left atrial pressure/PCWP.",
+        "Incorrect — hypovolemia would present with a low, not elevated, PCWP.",
+        "Incorrect — PE typically elevates right-sided pressures without directly elevating PCWP unless left heart disease coexists.",
+        "Incorrect — a PCWP this elevated is pathologic, not a normal exercise response."
+      ],
+      highYieldPoint:"PCWP approximates left atrial pressure. Elevated PCWP → left-sided heart failure/cardiogenic pulmonary edema. Low PCWP with hypotension → hypovolemia."
+    },{
+      vignette:"A researcher studies blood flow through small arterioles and notes that a small decrease in vessel radius produces a disproportionately large increase in resistance to flow.",
+      question:"This relationship is best explained by which of the following?",
+      options:[
+        "Resistance is inversely proportional to radius",
+        "Resistance is inversely proportional to the square of the radius",
+        "Resistance is inversely proportional to the fourth power of the radius",
+        "Resistance is directly proportional to the fourth power of the radius",
+        "Resistance is independent of vessel radius"
+      ],
+      correctIndex:2,
+      explanation:"By Poiseuille's law, resistance is inversely proportional to the fourth power of the vessel radius (R ∝ 1/r⁴), so even small reductions in radius cause disproportionately large increases in resistance — the basis for arteriolar control of systemic vascular resistance.",
+      optionExplanations:[
+        "Incorrect — underestimates how strongly resistance depends on radius.",
+        "Incorrect — still underestimates the true fourth-power relationship.",
+        "Correct — Poiseuille's law: R ∝ 1/r⁴.",
+        "Incorrect — resistance is inversely, not directly, related to radius.",
+        "Incorrect — radius is actually the dominant determinant of vascular resistance."
+      ],
+      highYieldPoint:"Poiseuille's law: Resistance ∝ 1/r⁴ (and ∝ length × viscosity). Arterioles are the main site of vascular resistance regulation because small radius changes cause disproportionately large resistance changes."
+    }],
+    'Atherosclerosis & ischemic heart disease':[{
+      vignette:"A 58-year-old man with a 30-pack-year smoking history and hyperlipidemia presents with crushing substernal chest pain radiating to the left arm and diaphoresis. ECG shows ST elevations in leads II, III, and aVF.",
+      question:"Occlusion of which artery is most likely responsible?",
+      options:["Left anterior descending artery","Right coronary artery","Left circumflex artery","Left main coronary artery","First diagonal branch"],
+      correctIndex:1,
+      explanation:"ST elevations in the inferior leads (II, III, aVF) localize the infarct to the inferior wall, which is supplied by the right coronary artery in most people (right-dominant circulation).",
+      optionExplanations:[
+        "Incorrect — LAD occlusion produces anterior ST elevations (V1-V4).",
+        "Correct — RCA supplies the inferior wall and AV node in most people; watch for bradyarrhythmias/heart block.",
+        "Incorrect — LCx occlusion typically produces lateral ST elevations (I, aVL, V5-V6).",
+        "Incorrect — left main occlusion causes diffuse, extensive ST changes, often with hemodynamic collapse.",
+        "Incorrect — a diagonal branch supplies a smaller anterolateral territory."
+      ],
+      highYieldPoint:"II, III, aVF ST elevation = inferior MI = RCA. Always check for right-sided/AV nodal involvement (bradycardia, heart block) and avoid nitrates (preload-dependent RV)."
+    }],
+    'Heart failure':[{
+      vignette:"A 70-year-old woman reports progressive dyspnea on exertion, orthopnea, and paroxysmal nocturnal dyspnea. Exam shows bilateral lower extremity edema and an S3 gallop. Echocardiography shows a left ventricular ejection fraction of 25%.",
+      question:"Which of the following best describes the primary hemodynamic abnormality?",
+      options:[
+        "Impaired ventricular relaxation with preserved contractility",
+        "Impaired myocardial contractility (systolic dysfunction) with reduced ejection fraction",
+        "Increased ventricular wall stiffness with normal ejection fraction",
+        "Isolated right ventricular pressure overload",
+        "Primary valvular regurgitation causing volume overload"
+      ],
+      correctIndex:1,
+      explanation:"A markedly reduced EF (25%) indicates HFrEF, driven by impaired contractility of the ventricular myocardium, leading to reduced stroke volume and compensatory neurohormonal activation (RAAS, sympathetic).",
+      optionExplanations:[
+        "Incorrect — this describes HFpEF (diastolic dysfunction), not this patient's reduced EF.",
+        "Correct — reduced EF defines HFrEF, caused by impaired systolic contractile function.",
+        "Incorrect — again describes HFpEF, which has a normal/preserved EF.",
+        "Incorrect — no findings suggest isolated RV/pulmonary pathology here.",
+        "Incorrect — no vignette findings point to a primary valve lesion."
+      ],
+      highYieldPoint:"EF < 40% = HFrEF (systolic/contractility problem). EF ≥ 50% with symptoms = HFpEF (diastolic/stiffness problem). S3 gallop classically accompanies volume overload in HFrEF."
+    }],
+    'Arrhythmias':[{
+      vignette:"A 24-year-old man with episodic palpitations has an ECG showing a short PR interval and a slurred upstroke of the QRS complex (delta wave). He develops atrial fibrillation with a rapid, irregular wide-complex rhythm.",
+      question:"Which of the following is contraindicated in managing this arrhythmia?",
+      options:["Procainamide","Synchronized cardioversion","IV adenosine or verapamil","Ibutilide","Catheter ablation of the accessory pathway (elective, later)"],
+      correctIndex:2,
+      explanation:"This is Wolff-Parkinson-White syndrome with pre-excited atrial fibrillation. AV nodal blockers preferentially slow conduction through the AV node, which can paradoxically increase conduction down the accessory pathway and precipitate ventricular fibrillation.",
+      optionExplanations:[
+        "Not contraindicated — procainamide slows conduction through the accessory pathway and is an appropriate choice.",
+        "Not contraindicated — cardioversion is appropriate if the patient is unstable.",
+        "Correct — AV nodal blocking agents can accelerate conduction down the accessory pathway, risking VF.",
+        "Not contraindicated — ibutilide is a reasonable pharmacologic option.",
+        "Not contraindicated — ablation is the definitive long-term treatment, just not an acute intervention."
+      ],
+      highYieldPoint:"WPW + AFib → avoid AV nodal blockers (adenosine, verapamil, digoxin, beta-blockers) — they can accelerate accessory-pathway conduction and precipitate VF."
+    }],
+    'Valvular disease':[{
+      vignette:"A 19-year-old asymptomatic woman is found on routine exam to have a mid-systolic click followed by a late systolic murmur at the apex. The murmur intensifies and the click occurs earlier with standing (Valsalva).",
+      question:"Which of the following is the most likely diagnosis?",
+      options:["Aortic stenosis","Mitral valve prolapse","Hypertrophic cardiomyopathy","Mitral stenosis","Tricuspid regurgitation"],
+      correctIndex:1,
+      explanation:"A mid-systolic click with a late systolic murmur at the apex is the classic finding of mitral valve prolapse; maneuvers that decrease left ventricular volume (standing, Valsalva) cause earlier prolapse, moving the click earlier.",
+      optionExplanations:[
+        "Incorrect — AS produces a harsh crescendo-decrescendo systolic murmur radiating to the carotids, not a click.",
+        "Correct — click + late systolic murmur at the apex, earlier with decreased preload, is textbook MVP.",
+        "Incorrect — HCM murmur increases with Valsalva too, but lacks the mid-systolic click and is typically at the left sternal border.",
+        "Incorrect — mitral stenosis produces a diastolic opening snap and rumble, not a systolic click.",
+        "Incorrect — TR produces a holosystolic murmur at the lower left sternal border."
+      ],
+      highYieldPoint:"Mid-systolic click + late systolic murmur at apex = MVP. Maneuvers that ↓ LV volume (standing, Valsalva) move the click earlier and lengthen the murmur."
+    }],
+    'Congenital heart disease':[{
+      vignette:"A cyanotic newborn has a chest X-ray showing a 'boot-shaped' heart with decreased pulmonary vascular markings. Echocardiography reveals a large ventricular septal defect, an overriding aorta, right ventricular hypertrophy, and pulmonary infundibular stenosis.",
+      question:"Which of the following is the most likely diagnosis?",
+      options:["Transposition of the great arteries","Tetralogy of Fallot","Truncus arteriosus","Atrial septal defect","Coarctation of the aorta"],
+      correctIndex:1,
+      explanation:"The combination of VSD, overriding aorta, RV hypertrophy, and pulmonic stenosis is the classic tetrad of Tetralogy of Fallot, the most common cause of early childhood cyanosis, producing the boot-shaped heart on X-ray.",
+      optionExplanations:[
+        "Incorrect — TGA presents with cyanosis and an 'egg-on-a-string' silhouette, without this four-part combination.",
+        "Correct — VSD + overriding aorta + RVH + pulmonic stenosis = Tetralogy of Fallot.",
+        "Incorrect — truncus arteriosus involves a single arterial trunk from both ventricles, not this tetrad.",
+        "Incorrect — isolated ASD is typically acyanotic (left-to-right shunt).",
+        "Incorrect — coarctation presents with differential blood pressures/pulses, not this valve/septal combination."
+      ],
+      highYieldPoint:"Boot-shaped heart + cyanotic infant → think Tetralogy of Fallot: VSD, overriding aorta, RV hypertrophy, pulmonic stenosis. Severity of pulmonic stenosis determines degree of cyanosis."
+    }],
+    'Cardiomyopathies':[{
+      vignette:"A 17-year-old competitive athlete collapses and dies suddenly during a basketball game. Autopsy reveals asymmetric septal hypertrophy with myocyte disarray. Prior to death, he had a systolic murmur that increased in intensity with Valsalva maneuver.",
+      question:"Which of the following is the most likely underlying diagnosis?",
+      options:["Dilated cardiomyopathy","Hypertrophic cardiomyopathy","Restrictive cardiomyopathy","Arrhythmogenic right ventricular cardiomyopathy","Viral myocarditis"],
+      correctIndex:1,
+      explanation:"Asymmetric septal hypertrophy with myocyte disarray, dynamic outflow obstruction (murmur increasing with Valsalva/decreased preload), and sudden death in a young athlete are classic for hypertrophic cardiomyopathy, often due to sarcomere protein mutations.",
+      optionExplanations:[
+        "Incorrect — DCM shows a dilated, thin-walled ventricle, not asymmetric hypertrophy.",
+        "Correct — asymmetric septal hypertrophy, myocyte disarray, and a Valsalva-accentuated murmur are classic HCM.",
+        "Incorrect — restrictive cardiomyopathy shows stiff, non-hypertrophied walls with diastolic dysfunction (e.g., amyloid).",
+        "Incorrect — ARVC involves fibrofatty replacement of the RV myocardium, not septal hypertrophy.",
+        "Incorrect — myocarditis shows lymphocytic infiltration, not structural hypertrophy with disarray."
+      ],
+      highYieldPoint:"HCM = leading cause of sudden cardiac death in young athletes. Murmur increases with ↓preload (Valsalva, standing) and decreases with ↑preload (squatting) — opposite of most other murmurs."
+    }],
+    'Vascular pathology':[{
+      vignette:"A 65-year-old man with poorly controlled hypertension presents with sudden-onset tearing chest pain radiating to the back. Blood pressure is 160/95 mmHg in the right arm and 120/80 mmHg in the left arm.",
+      question:"Which of the following is the most likely diagnosis?",
+      options:["Acute myocardial infarction","Aortic dissection","Pulmonary embolism","Esophageal rupture","Musculoskeletal chest pain"],
+      correctIndex:1,
+      explanation:"Sudden tearing chest/back pain with a blood pressure discrepancy between arms is classic for aortic dissection, in which the dissection flap can compromise flow to one subclavian artery.",
+      optionExplanations:[
+        "Incorrect — MI pain is typically pressure-like and does not classically cause an interarm BP discrepancy.",
+        "Correct — tearing pain radiating to the back plus interarm BP discrepancy is the classic dissection presentation.",
+        "Incorrect — PE presents with pleuritic pain, dyspnea, and tachycardia, not a tearing quality with BP discrepancy.",
+        "Incorrect — esophageal rupture typically follows vomiting/instrumentation and causes mediastinal emphysema.",
+        "Incorrect — musculoskeletal pain would not explain the BP discrepancy or systemic findings."
+      ],
+      highYieldPoint:"Tearing chest/back pain + BP or pulse discrepancy between limbs → aortic dissection until proven otherwise. Get a CT angiogram; risk factors include hypertension and connective tissue disease (Marfan)."
+    }]
+  }
+};
+
+const SUMMARY_BANK = {
+  cardio: {
+    'Cardiac physiology':{
+      sections:[
+        {heading:"Pressure-volume loops", bullets:[
+          "**Preload** ≈ end-diastolic volume; **afterload** ≈ arterial pressure the ventricle must overcome.",
+          "**Aortic stenosis** (pressure overload) → concentric hypertrophy → tall, narrow loop.",
+          "**Aortic/mitral regurgitation** (volume overload) → eccentric hypertrophy → wide loop, ↑EDV."
+        ]},
+        {heading:"Frank-Starling relationship", bullets:[
+          "↑ Preload → ↑ stroke volume, up to a point — the basis of the Frank-Starling curve.",
+          "Curve shifts **up-left** with ↑ contractility (e.g., catecholamines) and **down-right** with heart failure."
+        ]}
+      ],
+      table:{headers:["Lesion","Hypertrophy type","PV loop change"], rows:[
+        ["Aortic stenosis","Concentric","Taller, narrower"],
+        ["Aortic regurgitation","Eccentric","Wider, shifted right"],
+        ["Chronic hypertension","Concentric","Taller, narrower"]
+      ]},
+      mnemonic:"Pressure overload → concentric (walls thicken inward). Volume overload → eccentric (chamber dilates outward)."
+    },
+    'Atherosclerosis & ischemic heart disease':{
+      sections:[
+        {heading:"ECG localization", bullets:[
+          "**II, III, aVF** → inferior MI → **RCA** (usually).",
+          "**V1-V4** → anterior MI → **LAD**.",
+          "**I, aVL, V5-V6** → lateral MI → **LCx**.",
+          "**V1-V2 with tall R waves + ST depression** → posterior MI (reciprocal changes)."
+        ]},
+        {heading:"Biomarkers & timeline", bullets:[
+          "**Troponin** rises ~3-4h, peaks ~24h, stays elevated 7-10 days — most sensitive/specific.",
+          "**CK-MB** normalizes faster — useful for detecting **reinfarction** within days of the first MI."
+        ]}
+      ],
+      table:null,
+      mnemonic:"Inferior MI (RCA) → watch for bradycardia/heart block (AV node supply) and avoid nitrates/morphine (preload-dependent RV)."
+    },
+    'Heart failure':{
+      sections:[
+        {heading:"HFrEF vs HFpEF", bullets:[
+          "**HFrEF** (EF <40%): systolic/contractility problem → dilated ventricle, S3 gallop.",
+          "**HFpEF** (EF ≥50%): diastolic/stiffness problem → thickened, stiff ventricle, S4 gallop."
+        ]},
+        {heading:"Compensatory mechanisms", bullets:[
+          "↓ Cardiac output → RAAS + sympathetic activation → fluid retention & vasoconstriction — helpful short-term, harmful long-term (remodeling).",
+          "**BNP** released from stretched ventricular myocytes — useful to distinguish cardiac vs. non-cardiac dyspnea."
+        ]}
+      ],
+      table:{headers:["Feature","HFrEF","HFpEF"], rows:[
+        ["EF","<40%","≥50%"],
+        ["Gallop","S3","S4"],
+        ["Primary problem","Contractility ↓","Compliance ↓ (stiff wall)"]
+      ]},
+      mnemonic:"S3 = 'volume overload' sound (HFrEF, kids, high-output states). S4 = 'stiff ventricle' sound (HFpEF, longstanding HTN, hypertrophy)."
+    },
+    'Arrhythmias':{
+      sections:[
+        {heading:"WPW", bullets:[
+          "Accessory pathway (bundle of Kent) bypasses the AV node → **short PR + delta wave**.",
+          "In AFib, **avoid AV nodal blockers** (adenosine, CCBs, beta-blockers, digoxin) → can accelerate accessory pathway conduction → VF."
+        ]},
+        {heading:"Classic re-entrant rhythms", bullets:[
+          "**AVNRT**: most common paroxysmal SVT, re-entry within the AV node itself.",
+          "**AVRT**: re-entry using an accessory pathway (as in WPW)."
+        ]}
+      ],
+      table:null,
+      mnemonic:"Delta wave + short PR = WPW. If AFib + WPW → think procainamide/ibutilide or cardioversion, NOT AV nodal blockers."
+    },
+    'Valvular disease':{
+      sections:[
+        {heading:"Murmur quick reference", bullets:[
+          "**AS**: harsh crescendo-decrescendo systolic murmur, radiates to carotids, ↓ with Valsalva.",
+          "**MR**: holosystolic murmur radiating to axilla.",
+          "**MVP**: mid-systolic click + late systolic murmur, **earlier** click with ↓ preload (standing/Valsalva).",
+          "**MS**: diastolic opening snap + rumble; classic in rheumatic heart disease."
+        ]}
+      ],
+      table:{headers:["Maneuver","AS/MR/most murmurs","MVP/HCM"], rows:[
+        ["Valsalva/standing (↓ preload)","Softer","Louder / earlier"],
+        ["Squatting (↑ preload/afterload)","Louder","Softer / later"]
+      ]},
+      mnemonic:"MVP and HCM are the two 'opposite' murmurs — both get LOUDER with maneuvers that decrease ventricular volume."
+    },
+    'Congenital heart disease':{
+      sections:[
+        {heading:"Cyanotic vs. acyanotic", bullets:[
+          "Cyanotic ('blue') = right-to-left shunt: **Tetralogy of Fallot, Transposition, Truncus arteriosus, Tricuspid atresia, TAPVR** (the 5 T's).",
+          "Acyanotic ('left-to-right') = **VSD, ASD, PDA** — can reverse to cyanotic late (Eisenmenger syndrome) if untreated."
+        ]},
+        {heading:"Tetralogy of Fallot", bullets:[
+          "Four features: **VSD, overriding aorta, RV hypertrophy, pulmonic stenosis**.",
+          "Severity of **pulmonic stenosis** determines degree of right-to-left shunting/cyanosis.",
+          "'**Tet spells**' (worsening cyanosis with crying/exertion) improve with squatting (↑ systemic vascular resistance → less right-to-left shunt)."
+        ]}
+      ],
+      table:null,
+      mnemonic:"Boot-shaped heart = Tetralogy of Fallot. Egg-on-a-string = Transposition of the great arteries."
+    },
+    'Cardiomyopathies':{
+      sections:[
+        {heading:"Three patterns", bullets:[
+          "**Dilated**: thin, dilated walls → systolic dysfunction (think alcohol, viral myocarditis, doxorubicin).",
+          "**Hypertrophic**: thick septum, myocyte disarray → diastolic dysfunction + outflow obstruction; leading cause of sudden death in young athletes.",
+          "**Restrictive**: stiff, non-dilated walls (think amyloid, sarcoidosis, hemochromatosis) → diastolic dysfunction."
+        ]}
+      ],
+      table:{headers:["Type","Wall","Chamber size","Classic cause"], rows:[
+        ["Dilated","Thin","Dilated","Alcohol, myocarditis"],
+        ["Hypertrophic","Thick (asymmetric septum)","Normal/small","Sarcomere gene mutation"],
+        ["Restrictive","Normal/thick, stiff","Normal","Amyloidosis"]
+      ]},
+      mnemonic:"Dilated = big floppy bag. Hypertrophic = thick muscular wall obstructing outflow. Restrictive = stiff, can't stretch."
+    },
+    'Vascular pathology':{
+      sections:[
+        {heading:"Aortic dissection", bullets:[
+          "**Tearing** chest/back pain + BP/pulse discrepancy between limbs.",
+          "Risk factors: **hypertension** (most common), Marfan/connective tissue disease, bicuspid aortic valve.",
+          "Stanford **A** (ascending, involves arch) = surgical emergency; Stanford **B** (descending only) = usually managed medically."
+        ]},
+        {heading:"Aneurysms", bullets:[
+          "**Abdominal aortic aneurysm**: associated with atherosclerosis, smoking; often screened by ultrasound in older male smokers.",
+          "**Berry aneurysms** (circle of Willis) — associated with ADPKD, Ehlers-Danlos; risk of subarachnoid hemorrhage."
+        ]}
+      ],
+      table:null,
+      mnemonic:"Type A affects the Arch → operate. Type B is Below the arch → usually Beta-blockers + BP control."
+    }
+  }
+};
+
+function lookupBankQuestion(sysId, topic){
+  const arr = QUESTION_BANK[sysId] && QUESTION_BANK[sysId][topic];
+  if(!arr || !arr.length) return null;
+  return JSON.parse(JSON.stringify(arr[Math.floor(Math.random()*arr.length)]));
+}
+function lookupBankSummary(sysId, topic){
+  const s = SUMMARY_BANK[sysId] && SUMMARY_BANK[sysId][topic];
+  return s ? JSON.parse(JSON.stringify(s)) : null;
+}
+function getSysStat(sysId){
+  if(!DATA.stats[sysId]) DATA.stats[sysId] = { attempts:0, correct:0, topics:{} };
+  return DATA.stats[sysId];
+}
+function getTopicStat(sysId, topic){
+  const s = getSysStat(sysId);
+  if(!s.topics[topic]) s.topics[topic] = emptyTopicStat();
+  return s.topics[topic];
+}
+function pct(c,a){ return a>0 ? Math.round((c/a)*100) : null; }
+
+async function loadData(){
+  try{
+    const raw = await storageGet(STORAGE_KEY);
+    if(raw) DATA = JSON.parse(raw);
+    if(!DATA.settings) DATA.settings = {highYield:true};
+  }catch(e){ /* no saved data yet */ }
+  render();
+}
+async function saveData(){
+  await storageSet(STORAGE_KEY, JSON.stringify(DATA));
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function mdBold(str){
+  return escapeHtml(str).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function overallAccuracy(){
+  let a=0,c=0;
+  Object.values(DATA.stats).forEach(s=>{ a+=s.attempts; c+=s.correct; });
+  return {a,c};
+}
+
+function renderRail(){
+  const {a,c} = overallAccuracy();
+  document.getElementById('overallStat').innerHTML = a>0
+    ? `<b>${pct(c,a)}%</b> 정답 · 총 ${a}문제`
+    : '문제 시도 전';
+
+  const list = document.getElementById('sysList');
+  list.innerHTML = SYSTEMS.map(sys=>{
+    const st = DATA.stats[sys.id];
+    const p = st && st.attempts>0 ? pct(st.correct, st.attempts) : null;
+    const active = state.activeSystem===sys.id && state.view!=='quiz' ? 'active' : '';
+    return `<button class="sys-item ${active}" data-action="select-sys" data-sys="${sys.id}">
+      <span class="sys-dot" style="background:${sys.color}"></span>
+      <span class="sys-name">${sys.label}</span>
+      <span class="sys-pct">${p===null?'—':p+'%'}</span>
+    </button>`;
+  }).join('');
+}
+
+function renderDashboard(){
+  const sys = SYSTEMS.find(s=>s.id===state.activeSystem);
+  const sysStat = DATA.stats[sys.id];
+  const attempts = sysStat ? sysStat.attempts : 0;
+  const correct = sysStat ? sysStat.correct : 0;
+
+  const topicCards = sys.topics.map(topic=>{
+    const ts = sysStat && sysStat.topics[topic];
+    const a = ts ? ts.attempts : 0;
+    const c = ts ? ts.correct : 0;
+    const p = a>0 ? pct(c,a) : 0;
+    const inBank = !!(QUESTION_BANK[sys.id] && QUESTION_BANK[sys.id][topic]);
+    return `<div class="topic-card">
+      <div class="t-name">${escapeHtml(topic)} ${inBank?'<span class="bank-badge" title="미리 준비된 문제 있음">✓ 준비됨</span>':''}</div>
+      <div class="t-meta"><span>${a>0? a+'문제 · '+pct(c,a)+'%' : '미시도'}</span></div>
+      <div class="bar"><div class="bar-fill" style="width:${p}%;background:${sys.color}"></div></div>
+      <div class="t-actions">
+        <button data-action="start-topic" data-topic="${escapeHtml(topic)}">문제 풀기</button>
+        <button data-action="start-topic-summary" data-topic="${escapeHtml(topic)}">요약 노트</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const weakTopics = sys.topics
+    .map(t=>({t, st: sysStat && sysStat.topics[t]}))
+    .filter(x=>x.st && x.st.attempts>=2)
+    .map(x=>({t:x.t, p:pct(x.st.correct,x.st.attempts)}))
+    .sort((a,b)=>a.p-b.p)
+    .slice(0,3)
+    .filter(x=>x.p<70);
+
+  document.getElementById('main').innerHTML = `
+    <div class="crumb">SYSTEM</div>
+    <h2 class="page-title">${sys.label}</h2>
+    <div class="page-sub">First Aid 목차 기준 세부 주제 · <span class="bank-badge">✓ 준비됨</span> 표시가 있는 주제는 미리 준비된 문제라 즉시 풀 수 있고(Claude 밖에서도 작동), 나머지는 실시간 생성이라 Claude 안에서 실행할 때만 됩니다</div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">${attempts}</div><div class="lab">시도한 문제</div></div>
+      <div class="stat"><div class="num">${attempts>0?pct(correct,attempts)+'%':'—'}</div><div class="lab">정답률</div></div>
+    </div>
+
+    <label class="hy-toggle">
+      <input type="checkbox" data-action="toggle-hy" ${DATA.settings.highYield?'checked':''}>
+      고빈출(high-yield) 개념 위주로 출제 — 자주 나오는 전형적 증상-진단 연결, 특징적 소견 중심 (드문 사례는 배제)
+    </label>
+
+    ${weakTopics.length ? `<div style="margin-bottom:26px;">
+      <div class="crumb">취약 주제</div>
+      <div class="weak-list">${weakTopics.map(x=>`<div class="weak-row"><span>${escapeHtml(x.t)}</span><span>${x.p}%</span></div>`).join('')}</div>
+    </div>` : ''}
+
+    <div class="topic-grid">${topicCards}</div>
+
+    <div class="custom-box">
+      <h3>내 개념/노트로 문제 만들기</h3>
+      <p>직접 정리한 개념이나 헷갈리는 부분을 입력하면, 그 내용을 바탕으로 새로운 USMLE Step1 스타일 문제를 생성합니다. (원문 그대로 붙여넣기보다 본인 언어로 요약해서 입력하는 걸 권장합니다)</p>
+      <textarea id="customNotes" placeholder="예: nephrotic syndrome 중에서 membranous nephropathy와 minimal change disease 감별 포인트가 헷갈림"></textarea>
+      <div class="t-actions" style="margin-top:10px;">
+        <button class="primary-btn" data-action="start-custom">이 내용으로 문제 생성</button>
+        <button class="ghost-btn" data-action="start-custom-summary">이 내용으로 요약 노트</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderLoading(){
+  document.getElementById('main').innerHTML = `
+    <div class="crumb">GENERATING</div>
+    <h2 class="page-title">문제 생성 중</h2>
+    <div class="loading-block">${escapeHtml(state.loadingMsg || 'AI가 새 문제를 작성하고 있습니다...')}</div>
+  `;
+}
+
+function renderError(){
+  document.getElementById('main').innerHTML = `
+    <div class="crumb">ERROR</div>
+    <h2 class="page-title">문제 생성 실패</h2>
+    <div class="error-block"><b>오류가 발생했습니다</b>${escapeHtml(state.errorMsg)}</div>
+    <div style="margin-top:16px;"><button class="ghost-btn" data-action="back-dashboard">대시보드로</button></div>
+  `;
+}
+
+function renderSummary(){
+  const s = state.summary;
+  const sectionsHtml = (s.sections||[]).map(sec=>`
+    <div class="sum-section">
+      ${sec.heading ? `<div class="sum-heading">${escapeHtml(sec.heading)}</div>` : ''}
+      <ul class="sum-bullets">${(sec.bullets||[]).map(b=>`<li>${mdBold(b)}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+
+  const tableHtml = s.table && s.table.headers ? `
+    <div class="sum-table-wrap">
+      <table class="sum-table">
+        <thead><tr>${s.table.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead>
+        <tbody>${s.table.rows.map(row=>`<tr>${row.map(cell=>`<td>${mdBold(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    </div>` : '';
+
+  document.getElementById('main').innerHTML = `
+    <div class="crumb">${s.system ? escapeHtml(s.system)+' · ' : ''}SUMMARY NOTE</div>
+    <h2 class="page-title">${escapeHtml(s.topic)}</h2>
+    <div class="page-sub">First Aid 스타일 고빈출 요약 — AI가 새로 작성한 원본 콘텐츠입니다</div>
+
+    <div class="summary-card">
+      ${sectionsHtml}
+      ${tableHtml}
+      ${s.mnemonic ? `<div class="sum-mnemonic"><div class="e-label">MNEMONIC / BUZZWORD</div><p>${mdBold(s.mnemonic)}</p></div>` : ''}
+    </div>
+
+    <div class="quiz-actions">
+      <button class="primary-btn" data-action="${s._isCustom ? 'start-custom-quiz-from-summary' : 'start-topic'}" data-topic="${escapeHtml(s.topic)}">이 주제로 문제 풀기</button>
+      <button class="ghost-btn" data-action="back-dashboard">대시보드로</button>
+    </div>
+  `;
+}
+
+function renderQuiz(){
+  const q = state.quiz;
+  const letters = ['A','B','C','D','E'];
+  const optsHtml = q.options.map((opt,i)=>{
+    let cls = 'opt';
+    if(state.answered){
+      cls += ' locked';
+      if(i===q.correctIndex) cls += ' correct';
+      else if(i===state.selectedIdx) cls += ' incorrect';
+    }
+    const optExplain = state.answered && q.optionExplanations && q.optionExplanations[i]
+      ? `<div class="opt-explain">${escapeHtml(q.optionExplanations[i])}</div>` : '';
+    return `<div class="${cls}">
+      <button class="opt-btn" data-action="pick" data-idx="${i}" ${state.answered?'disabled':''}>
+        <span class="letter">${letters[i]}</span><span>${escapeHtml(opt)}</span>
+      </button>
+      ${optExplain}
+    </div>`;
+  }).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="crumb">${escapeHtml(q.system)} · QUIZ</div>
+    <h2 class="page-title">${escapeHtml(q.topic)}</h2>
+    <div class="vignette-card">
+      <div class="v-tag">CLINICAL VIGNETTE</div>
+      <p class="v-text">${escapeHtml(q.vignette)}</p>
+      <div class="v-question">${escapeHtml(q.question)}</div>
+    </div>
+    <div class="options">${optsHtml}</div>
+    ${state.answered ? `
+      <div class="explain">
+        <div class="e-label">${state.selectedIdx===q.correctIndex ? '정답입니다' : '오답입니다'} · 총평</div>
+        <p>${escapeHtml(q.explanation)}</p>
+      </div>
+      ${q.highYieldPoint ? `<div class="hy-point">
+        <div class="e-label">HIGH-YIELD POINT</div>
+        <p>${escapeHtml(q.highYieldPoint)}</p>
+      </div>` : ''}
+      <div class="quiz-actions">
+        <button class="primary-btn" data-action="next-topic">같은 주제로 다음 문제</button>
+        <button class="ghost-btn" data-action="back-dashboard">대시보드로</button>
+      </div>
+    ` : ''}
+  `;
+}
+
+function render(){
+  renderRail();
+  if(state.view==='dashboard') renderDashboard();
+  else if(state.view==='loading') renderLoading();
+  else if(state.view==='error') renderError();
+  else if(state.view==='quiz') renderQuiz();
+  else if(state.view==='summary') renderSummary();
+}
+
+async function callClaude(systemPrompt, userPrompt){
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:1500,
+      system: systemPrompt,
+      messages:[{role:'user', content:userPrompt}]
+    })
+  });
+  if(!res.ok) throw new Error('API request failed: ' + res.status);
+  const data = await res.json();
+  const textBlock = (data.content||[]).find(b=>b.type==='text');
+  if(!textBlock) throw new Error('모델 응답에서 텍스트를 찾을 수 없습니다');
+  let raw = textBlock.text.trim();
+  raw = raw.replace(/^```json\s*/i,'').replace(/^```\s*/,'').replace(/```\s*$/,'');
+  let parsed;
+  try{ parsed = JSON.parse(raw); }
+  catch(e){ throw new Error('모델 응답을 파싱하지 못했습니다'); }
+  return parsed;
+}
+
+const QUESTION_SYSTEM_PROMPT = `You are an experienced USMLE Step 1 question writer. Generate ONE original, high-quality clinical-vignette multiple-choice question, formatted in the STRUCTURAL STYLE of UWorld Step 1 practice questions.
+Content rule: write entirely original content from general medical knowledge. Never reference, paraphrase closely, or reproduce the actual text of any specific copyrighted textbook, question bank, or other proprietary source — only mimic the well-known FORMAT/STRUCTURE conventions described below.
+Structural conventions to follow (format only, not content):
+- Vignette: open with patient age/sex, presents with chief complaint, then relevant history, exam findings, and labs/vitals in a compact clinical-note style — the kind of dense-but-scannable paragraph typical of qbank vignettes.
+- Question stem: end with a single, precise, closed-ended question such as "Which of the following is the most likely diagnosis?", "...most likely underlying mechanism?", "...most appropriate next step in management?", or similar — pick whichever fits the topic.
+- Options: exactly 5, all clinically plausible and from the same differential/category (not obviously-wrong filler choices) — this is what makes UWorld-style questions require fine discrimination.
+- Explanations: provide a "explanation" (2-4 sentence overall teaching point on why the correct answer is right) AND "optionExplanations": an array of exactly 5 short strings (one per option, in order) each explaining concisely why that specific option is correct or, for the others, why it's incorrect/less likely — mirroring UWorld's per-choice breakdown style.
+- Also provide "highYieldPoint": one or two sentences stating the single core testable fact/association this question is built around, phrased as a memorable flashcard-style takeaway.
+Respond with ONLY valid JSON, no markdown code fences, no preamble or commentary, matching exactly this schema:
+{"vignette": string, "question": string, "options": [string,string,string,string,string], "correctIndex": number (0-4), "explanation": string, "optionExplanations": [string,string,string,string,string], "highYieldPoint": string}`;
+
+const SUMMARY_SYSTEM_PROMPT = `You are writing a concise high-yield review note for a USMLE Step 1 student, formatted in the STRUCTURAL STYLE of First Aid for the USMLE Step 1 (the well-known review book).
+Content rule: write entirely original content from general medical knowledge. Never reference, paraphrase closely, or reproduce the actual text of First Aid or any other copyrighted source — only mimic the well-known FORMAT conventions described below.
+Structural conventions to follow (format only, not content):
+- Extremely concise, high-density bullet points rather than full paragraphs.
+- Bold the key testable terms/buzzwords inline using **double asterisks**.
+- Use arrow notation (→) for cause-effect or sequential relationships where natural.
+- Where the topic involves distinguishing similar conditions, include a small comparison table.
+- Group content under a few short subheadings if the topic has distinct sub-parts (e.g. "Etiology", "Presentation", "Diagnosis", "Treatment") — only include subheadings that are actually useful for this topic, don't force all of them.
+Respond with ONLY valid JSON, no markdown code fences, no preamble or commentary, matching exactly this schema:
+{"sections": [ {"heading": string, "bullets": [string, ...]} , ... ], "table": {"headers": [string,...], "rows": [[string,...], ...]} | null, "mnemonic": string | null}
+("table" and "mnemonic" may be null if not useful for this topic. Bullets may contain **bold** markers.)`;
+
+function highYieldInstruction(){
+  return DATA.settings.highYield
+    ? `\nFocus: prioritize classic HIGH-YIELD content for this topic — the associations, buzzword findings, characteristic lab/imaging patterns, and commonly-confused conditions that appear most frequently on USMLE Step 1. Avoid obscure edge cases or rare "zebra" presentations unless they are themselves classically high-yield for this exact topic. The vignette should reflect the single most classic, textbook presentation examinees are expected to recognize.`
+    : '';
+}
+
+async function generateFromTopic(sysLabel, topic){
+  const bankHit = lookupBankQuestion(state.activeSystem, topic);
+  if(bankHit){
+    bankHit.system = sysLabel; bankHit.topic = topic; bankHit._sysId = state.activeSystem; bankHit._isCustom = false;
+    state.quiz = bankHit; state.answered=false; state.selectedIdx=null; state.view='quiz';
+    render();
+    return;
+  }
+  if(!window.storage){
+    state.errorMsg = '이 주제는 아직 준비된 문제 풀이 없습니다. 실시간 생성은 Claude 안에서 실행할 때만 가능합니다.';
+    state.view='error'; render();
+    return;
+  }
+  state.view='loading'; state.loadingMsg = `${topic} 주제로 문제를 작성 중입니다...`; render();
+  try{
+    const q = await callClaude(QUESTION_SYSTEM_PROMPT,
+      `Topic: ${topic}\nSystem/category: ${sysLabel}\nWrite one USMLE Step 1 level vignette question on this topic. It's fine to integrate 1-2 related concepts if that reflects realistic exam integration.${highYieldInstruction()}`);
+    q.system = sysLabel; q.topic = topic; q._sysId = state.activeSystem; q._isCustom = false;
+    state.quiz = q; state.answered=false; state.selectedIdx=null; state.view='quiz';
+  }catch(e){
+    state.errorMsg = e.message; state.view='error';
+  }
+  render();
+}
+
+async function generateFromNotes(notes){
+  if(!window.storage){
+    state.errorMsg = '내 노트로 문제 만들기는 실시간 생성 기능이라 Claude 안에서 실행할 때만 가능합니다.';
+    state.view='error'; render();
+    return;
+  }
+  state.view='loading'; state.loadingMsg = '입력한 내용을 바탕으로 문제를 작성 중입니다...'; render();
+  try{
+    const q = await callClaude(QUESTION_SYSTEM_PROMPT,
+      `A medical student preparing for USMLE Step 1 wrote the following notes describing a concept they want to be tested on:\n"""${notes}"""\nWrite one original USMLE Step 1 level vignette question testing the underlying concept(s) in these notes. Do not copy any phrasing that might itself be quoted from a textbook or qbank — write a fresh scenario.${highYieldInstruction()}`);
+    const shortLabel = notes.length>40 ? notes.slice(0,40)+'…' : notes;
+    q.system = 'Custom'; q.topic = shortLabel; q._sysId = null; q._isCustom = true; q._customKey = shortLabel;
+    state.quiz = q; state.answered=false; state.selectedIdx=null; state.view='quiz';
+  }catch(e){
+    state.errorMsg = e.message; state.view='error';
+  }
+  render();
+}
+
+async function generateSummary(sysLabel, topic, sourceNotes){
+  if(!sourceNotes){
+    const bankHit = lookupBankSummary(state.activeSystem, topic);
+    if(bankHit){
+      bankHit.system = sysLabel; bankHit.topic = topic; bankHit._sysId = state.activeSystem; bankHit._isCustom = false; bankHit._sourceNotes = null;
+      state.summary = bankHit; state.view='summary';
+      render();
+      return;
+    }
+  }
+  if(!window.storage){
+    state.errorMsg = '이 주제는 아직 준비된 요약 노트가 없습니다. 실시간 생성은 Claude 안에서 실행할 때만 가능합니다.';
+    state.view='error'; render();
+    return;
+  }
+  state.view='loading';
+  state.loadingMsg = sourceNotes ? '입력한 내용을 바탕으로 요약 노트를 작성 중입니다...' : `${topic} 요약 노트를 작성 중입니다...`;
+  render();
+  try{
+    const prompt = sourceNotes
+      ? `A medical student wrote these notes on a concept they want summarized for review:\n"""${sourceNotes}"""\nWrite a First-Aid-style high-yield summary note covering the underlying concept(s).${highYieldInstruction()}`
+      : `Topic: ${topic}\nSystem/category: ${sysLabel}\nWrite a First-Aid-style high-yield summary note on this topic.${highYieldInstruction()}`;
+    const s = await callClaude(SUMMARY_SYSTEM_PROMPT, prompt);
+    s.system = sysLabel; s.topic = sourceNotes ? (sourceNotes.length>40?sourceNotes.slice(0,40)+'…':sourceNotes) : topic;
+    s._sysId = sourceNotes ? null : state.activeSystem; s._isCustom = !!sourceNotes; s._sourceNotes = sourceNotes || null;
+    state.summary = s; state.view='summary';
+  }catch(e){
+    state.errorMsg = e.message; state.view='error';
+  }
+  render();
+}
+
+document.addEventListener('click', async (e)=>{
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+
+  if(action==='toggle-hy'){
+    DATA.settings.highYield = btn.checked;
+    await saveData();
+    return;
+  }
+  else if(action==='select-sys'){
+    state.activeSystem = btn.dataset.sys; state.view='dashboard'; render();
+  }
+  else if(action==='start-topic'){
+    const sys = SYSTEMS.find(s=>s.id===state.activeSystem);
+    await generateFromTopic(sys.label, btn.dataset.topic);
+  }
+  else if(action==='start-topic-summary'){
+    const sys = SYSTEMS.find(s=>s.id===state.activeSystem);
+    await generateSummary(sys.label, btn.dataset.topic, null);
+  }
+  else if(action==='start-custom'){
+    const notes = document.getElementById('customNotes').value.trim();
+    if(!notes) return;
+    await generateFromNotes(notes);
+  }
+  else if(action==='start-custom-summary'){
+    const notes = document.getElementById('customNotes').value.trim();
+    if(!notes) return;
+    await generateSummary(null, null, notes);
+  }
+  else if(action==='pick'){
+    if(state.answered) return;
+    const idx = parseInt(btn.dataset.idx,10);
+    state.selectedIdx = idx; state.answered = true;
+    const q = state.quiz;
+    const isCorrect = idx===q.correctIndex;
+    if(q._isCustom){
+      // store custom attempts under a lightweight bucket in stats, not tied to a system
+      if(!DATA.stats['_custom']) DATA.stats['_custom'] = {attempts:0, correct:0, topics:{}};
+      const s = DATA.stats['_custom'];
+      s.attempts++; if(isCorrect) s.correct++;
+      if(!s.topics[q._customKey]) s.topics[q._customKey] = emptyTopicStat();
+      s.topics[q._customKey].attempts++; if(isCorrect) s.topics[q._customKey].correct++;
+    } else {
+      const s = getSysStat(q._sysId); s.attempts++; if(isCorrect) s.correct++;
+      const ts = getTopicStat(q._sysId, q.topic); ts.attempts++; if(isCorrect) ts.correct++;
+    }
+    DATA.history.unshift({ts:Date.now(), system:q.system, topic:q.topic, correct:isCorrect});
+    DATA.history = DATA.history.slice(0,50);
+    await saveData();
+    render();
+  }
+  else if(action==='start-custom-quiz-from-summary'){
+    const s = state.summary;
+    await generateFromNotes(s._sourceNotes || s.topic);
+  }
+  else if(action==='next-topic'){
+    const q = state.quiz;
+    if(q._isCustom){
+      const notes = q.topic;
+      await generateFromNotes(notes.endsWith('…') ? notes.slice(0,-1) : notes);
+    } else {
+      await generateFromTopic(q.system, q.topic);
+    }
+  }
+  else if(action==='back-dashboard'){
+    state.view='dashboard'; render();
+  }
+  else if(action==='reset'){
+    if(confirm('모든 학습 기록을 초기화할까요? 되돌릴 수 없습니다.')){
+      DATA = {stats:{}, history:[], settings:{highYield:true}};
+      await saveData();
+      state.view='dashboard'; render();
+    }
+  }
+});
+
+loadData();
+</script>
+</body>
+</html>
